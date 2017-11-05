@@ -1,6 +1,6 @@
 ---
 - name: Ensure smartmontools is installed
-  apt: name=smartmontools
+  apt: name=smartmontools state=present
 
 - name: Ensure the timeout on the DHCP client is not the default 5 minutes
   lineinfile:
