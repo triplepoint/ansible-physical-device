@@ -1,0 +1,9 @@
+---
+- name: Ensure smartmontools is installed
+  apt: name=smartmontools
+
+- name: Ensure the timeout on the DHCP client is not the default 5 minutes
+  lineinfile:
+    path: /etc/dhcp/dhclient.conf
+    regex: '^timeout '
+    line: "timeout {{ physical_device_dhclient_timeout }};"

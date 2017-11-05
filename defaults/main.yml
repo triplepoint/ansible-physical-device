@@ -1,0 +1,3 @@
+---
+# The dhcp wait on device bringup
+physical_device_dhclient_timeout: 60 
