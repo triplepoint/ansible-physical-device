@@ -5,5 +5,5 @@
 - name: Ensure the timeout on the DHCP client is not the default 5 minutes
   lineinfile:
     path: /etc/dhcp/dhclient.conf
-    regex: '^timeout '
+    regexp: '^timeout '
     line: "timeout {{ physical_device_dhclient_timeout }};"
