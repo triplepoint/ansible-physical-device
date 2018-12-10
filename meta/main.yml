@@ -1,6 +1,5 @@
 ---
 galaxy_info:
-  role_name: physical-device
   author: Jonathan Hanson
   description: A basic physical machine preparation role.
   license: MIT
