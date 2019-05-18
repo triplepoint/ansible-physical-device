@@ -1,3 +1,10 @@
 ---
 # The dhcp client wait on device bringup
 physical_device_dhclient_timeout: 60
+
+# Should we install the smartmontools disk monitor?
+physical_device_install_smartmontools: yes
+
+# The name of the system timezone to set.  When false,
+# leave the system timezone unchanged.
+physical_device_timezone: false
