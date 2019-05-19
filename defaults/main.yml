@@ -8,3 +8,8 @@ physical_device_install_smartmontools: yes
 # The name of the system timezone to set.  When false,
 # leave the system timezone unchanged.
 physical_device_timezone: false
+
+# The name of the Locale to set.  When false,
+# leave the locale unchanged.
+# eg, "en_US.UTF-8"
+physical_device_locale: false
