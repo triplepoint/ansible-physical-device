@@ -11,15 +11,15 @@
 
 - name: Ensure the timezone is set appropriately
   timezone: name="{{ physical_device_timezone }}"
-  when: physical_device_timezone | bool
+  when: physical_device_timezone != false
   notify: restart cron
 
 - name: Ensure the locale exists
   locale_gen:
     name: "{{ physical_device_locale }}"
     state: present
-  when: physical_device_locale | bool
+  when: physical_device_locale != false
 
 - name: Ensure the default locale is set
   command: "update-locale LANG={{ physical_device_locale }}"
-  when: physical_device_locale | bool
+  when: physical_device_locale != false
