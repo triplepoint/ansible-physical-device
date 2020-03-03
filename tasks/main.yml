@@ -1,6 +1,8 @@
 ---
 - name: Ensure smartmontools is installed
-  package: name=smartmontools state=present
+  package:
+    name: smartmontools
+    state: present
   when: physical_device_install_smartmontools
 
 - name: Ensure the timeout on the DHCP client is not the default 5 minutes
@@ -10,7 +12,8 @@
     line: "timeout {{ physical_device_dhclient_timeout }};"
 
 - name: Ensure the timezone is set appropriately
-  timezone: name="{{ physical_device_timezone }}"
+  timezone:
+    name: "{{ physical_device_timezone }}"
   when: physical_device_timezone != false
   notify: restart cron
 
