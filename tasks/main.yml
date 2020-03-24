@@ -5,24 +5,31 @@
     state: present
   when: physical_device_install_smartmontools
 
+- name: Determine whether the dhclient config file exists
+  stat:
+    path: /etc/dhcp/dhclient.conf
+  register: physical_device_dhclientconf_stat
+  changed_when: false
+
 - name: Ensure the timeout on the DHCP client is not the default 5 minutes
   lineinfile:
     path: /etc/dhcp/dhclient.conf
     regexp: '^timeout '
     line: "timeout {{ physical_device_dhclient_timeout }};"
+  when: physical_device_dhclientconf_stat.stat.exists
 
 - name: Ensure the timezone is set appropriately
   timezone:
     name: "{{ physical_device_timezone }}"
-  when: physical_device_timezone != false
+  when: physical_device_timezone | bool
   notify: restart cron
 
 - name: Ensure the locale exists
   locale_gen:
     name: "{{ physical_device_locale }}"
     state: present
-  when: physical_device_locale != false
+  when: physical_device_locale | bool
 
 - name: Ensure the default locale is set
   command: "update-locale LANG={{ physical_device_locale }}"
-  when: physical_device_locale != false
+  when: physical_device_locale | bool
