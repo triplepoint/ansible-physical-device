@@ -5,11 +5,17 @@ physical_device_dhclient_timeout: 60
 # Should we install the smartmontools disk monitor?
 physical_device_install_smartmontools: yes
 
-# The name of the system timezone to set.  When "",
-# leave the system timezone unchanged.
-physical_device_timezone: ""
+# The name of the system timezone to set
+# eg, "America/Los_Angeles"
+# see `timedatectl list-timezones`
+physical_device_timezone: "UTC"
 
-# The name of the Locale to set.  When "",
-# leave the locale unchanged.
+# The name of the system Locale to set.
 # eg, "en_US.UTF-8"
-physical_device_locale: ""
+# see `localectl list-locales`
+physical_device_locale: "en_US.UTF-8"
+
+# The name of the system Language to set.
+# eg, "en_US.UTF-8"
+# see `localectl list-locales`
+physical_device_language: "en_US.UTF-8"

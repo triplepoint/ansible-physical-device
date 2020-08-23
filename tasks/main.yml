@@ -21,15 +21,31 @@
 - name: Ensure the timezone is set appropriately
   timezone:
     name: "{{ physical_device_timezone }}"
-  when: physical_device_timezone | default(false)
   notify: restart cron
 
-- name: Ensure the locale exists
+- name: Ensure localisation files for '{{ physical_device_locale }}' are available
   locale_gen:
     name: "{{ physical_device_locale }}"
     state: present
-  when: physical_device_locale | default(false)
 
-- name: Ensure the default locale is set
-  command: "update-locale LANG={{ physical_device_locale }}"
-  when: physical_device_locale | default(false)
+- name: Ensure localisation files for '{{ physical_device_language }}' are available
+  locale_gen:
+    name: "{{ physical_device_language }}"
+    state: present
+
+- name: Get current locale and language configuration
+  command: localectl status
+  register: _physical_device_locale_status
+  changed_when: false
+
+- name: Parse 'LANG' from current locale and language configuration
+  set_fact:
+    _physical_device_locale_lang: "{{ _physical_device_locale_status.stdout | regex_search('LANG=([^\n]+)', '\\1') | first }}"
+
+- name: Parse 'LANGUAGE' from current locale and language configuration
+  set_fact:
+    _physical_device_locale_language: "{{ _physical_device_locale_status.stdout | regex_search('LANGUAGE=([^\n]+)', '\\1') | default([_physical_device_locale_lang], true) | first }}"
+
+- name: Configure locale to '{{ physical_device_locale }}' and language to '{{ physical_device_language }}'
+  command: "localectl set-locale LANG={{ physical_device_locale }} LANGUAGE={{ physical_device_language }}"
+  when: _physical_device_locale_lang != physical_device_locale or _physical_device_locale_language != physical_device_language
