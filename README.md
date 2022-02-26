@@ -1,4 +1,4 @@
-# Intro [![Build Status](https://www.travis-ci.com/triplepoint/ansible-physical-device.svg?branch=main)](https://www.travis-ci.com/triplepoint/ansible-physical-device)
+# Intro
 Set up a basic physical machine, such that it boots cleanly and is ready for additional role deployments.
 
 ## Requirements
