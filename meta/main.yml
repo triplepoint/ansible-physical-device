@@ -1,6 +1,7 @@
 ---
 galaxy_info:
   role_name: physical_device
+  namespace: triplepoint
   author: Jonathan Hanson
   description: A basic physical machine preparation role.
   license: MIT
