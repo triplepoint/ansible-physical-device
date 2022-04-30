@@ -37,6 +37,7 @@
   command: localectl status
   register: _physical_device_locale_status
   changed_when: false
+  check_mode: no
 
 - name: Parse 'LANG' from current locale and language configuration
   set_fact:
