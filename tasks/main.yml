@@ -1,52 +1,52 @@
 ---
 - name: Ensure smartmontools is installed
-  package:
+  ansible.builtin.package:
     name: smartmontools
     state: present
   when: physical_device_install_smartmontools
 
 - name: Determine whether the dhclient config file exists
-  stat:
+  ansible.builtin.stat:
     path: /etc/dhcp/dhclient.conf
   register: physical_device_dhclientconf_stat
   changed_when: false
 
 - name: Ensure the timeout on the DHCP client is not the default 5 minutes
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/dhcp/dhclient.conf
     regexp: '^timeout '
     line: "timeout {{ physical_device_dhclient_timeout }};"
   when: physical_device_dhclientconf_stat.stat.exists
 
 - name: Ensure the timezone is set appropriately
-  timezone:
+  community.general.timezone:
     name: "{{ physical_device_timezone }}"
-  notify: restart cron
+  notify: Restart cron
 
-- name: Ensure localisation files for '{{ physical_device_locale }}' are available
-  locale_gen:
+- name: Ensure localisation files are available for {{ physical_device_locale }}
+  community.general.locale_gen:
     name: "{{ physical_device_locale }}"
     state: present
 
-- name: Ensure localisation files for '{{ physical_device_language }}' are available
-  locale_gen:
+- name: Ensure localisation files are available for {{ physical_device_language }}
+  community.general.locale_gen:
     name: "{{ physical_device_language }}"
     state: present
 
 - name: Get current locale and language configuration
-  command: localectl status
+  ansible.builtin.command: localectl status
   register: _physical_device_locale_status
   changed_when: false
   check_mode: no
 
 - name: Parse 'LANG' from current locale and language configuration
-  set_fact:
+  ansible.builtin.set_fact:
     _physical_device_locale_lang: "{{ _physical_device_locale_status.stdout | regex_search('LANG=([^\n]+)', '\\1') | first }}"
 
 - name: Parse 'LANGUAGE' from current locale and language configuration
-  set_fact:
+  ansible.builtin.set_fact:
     _physical_device_locale_language: "{{ _physical_device_locale_status.stdout | regex_search('LANGUAGE=([^\n]+)', '\\1') | default([_physical_device_locale_lang], true) | first }}"
 
-- name: Configure locale to '{{ physical_device_locale }}' and language to '{{ physical_device_language }}'
-  command: "localectl set-locale LANG={{ physical_device_locale }} LANGUAGE={{ physical_device_language }}"
+- name: Configure locale to {{ physical_device_locale + " and language to " + physical_device_language }}
+  ansible.builtin.command: "localectl set-locale LANG={{ physical_device_locale }} LANGUAGE={{ physical_device_language }}"
   when: _physical_device_locale_lang != physical_device_locale or _physical_device_locale_language != physical_device_language
